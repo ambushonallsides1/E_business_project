@@ -26,7 +26,7 @@ SECRET_KEY = '-1xk7pzt5rh24*e7-g4krxp^yms%-xdzkiohjais_83*hb7&p7'
 DEBUG = True
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['www.meiduo.site']
+ALLOWED_HOSTS = ['www.meiduo.site','192.168.127.129']
 
 # Application definition
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.users',
 ]
 
 MIDDLEWARE = [
@@ -130,10 +131,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 # LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
 # TIME_ZONE = 'UTC'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -213,4 +214,7 @@ LOGGING = {
 # 实例化日志对象
 import logging
 logger = logging.getLogger('django')
+
+# 指定本项目用户模型类
+AUTH_USER_MODEL = 'users.User'
 
