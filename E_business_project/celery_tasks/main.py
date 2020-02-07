@@ -5,4 +5,4 @@ os.environ.setdefault('"DJANGO_SETTINGS_MODULE", "E_business_project.settings.de
 
 app = Celery('celery_tasks')
 
-app.autodiscover_tasks(['celery_tasks.sms'])
+app.autodiscover_tasks(['celery_tasks.sms','send_verify_email'])
