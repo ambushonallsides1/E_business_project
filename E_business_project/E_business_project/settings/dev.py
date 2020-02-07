@@ -234,3 +234,6 @@ logger = logging.getLogger('django')
 # 指定本项目用户模型类
 AUTH_USER_MODEL = 'users.User'
 
+AUTHENTICATION_BACKENDS = ['apps.users.utils.UsernameMobileAuthBackend']
+
+LOGIN_URL = '/login/'

@@ -78,10 +78,11 @@ class SMSCodeView(View):
 
 
         # 第三方发送短信验证码
-        from libs.yuntongxun.sms import CCP
-        # ccp = CCP()
-        # ccp.send_template_sms('13284922790', ['1234', 5], 1)
+        from celery_tasks.sms.tasks import ccp_send_sms_code
+        send_result = ccp_send_sms_code(mobile, sms_code)
         print("当前验证码是:", sms_code)
+        if send_result != 0:
+            return http.HttpResponse({'code': '4001', 'errmsg': '发送短信失败'})
 
         return http.HttpResponse({'code':'0', 'errmsg': '发送短信成功'})
 

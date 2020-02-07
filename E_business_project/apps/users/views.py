@@ -1,8 +1,8 @@
 import re
 from django import http
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 from django.urls import reverse
 
@@ -11,6 +11,78 @@ from pymysql import DatabaseError
 
 from apps.users.models import User
 from utils.response_code import RETCODE
+
+class LogoutView(View):
+    """退出登录"""
+
+    def get(self, request):
+        """实现退出登录逻辑"""
+        # 清理session
+        logout(request)
+        # 退出登录，重定向到登录页
+        response = redirect(reverse('contents:index'))
+        # 退出登录时清除cookie中的username
+        response.delete_cookie('username')
+
+        return response
+
+
+class LoginView(View):
+    '''用户登录'''
+
+    def get(self, request):
+        """
+          提供登录界面
+          :param request: 请求对象
+          :return: 登录界面
+        """
+        return render(request, 'login.html')
+
+    def post(self, request):
+        '''实现用户登录'''
+        # 解析参数
+        # 校验参数
+        # 查询用户是否存在
+        # 判断密码是否正确
+        # 是否记住用户名密码
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        # 是否记住用户名参数
+        remembered = request.POST.get('remembered')
+
+        if not all([username, password]):
+            return http.HttpResponseForbidden('参数不齐全')
+        if not re.match(r'^[a-zA-Z0-9_-]{5-20}$', username):
+            return http.HttpResponseForbidden('请输入5-20个字符的用户名')
+        if not re.match(r'^[a-zA-Z0-9]{8-20}$', password):
+            return http.HttpResponseForbidden('请输入8-20个字符的密码')
+
+        from django.contrib.auth import authenticate, login
+        user = authenticate(username=username, password=password)
+
+        login(request,user)
+
+        if user is None:
+            return render(request, 'login.html', context={'account_errmsg': '用户名或密码错误'})
+
+        if remembered != 'on':
+            request.session.set_expiry(0)
+        else:
+            request.session.set_expiry(None)
+
+        next = request.GET.get('next')
+        if next:
+            response = redirect(next)
+        else:
+            response = redirect(reverse('contents:index'))
+
+        # 登录时用户名写入到cookie，有效期15天
+        response.set_cookie('username', user.username, max_age=3600 * 24 * 15)
+
+        # 响应登录结果
+
+
+        return response
 
 
 class RegisterView(View):
@@ -68,15 +140,19 @@ class RegisterView(View):
 
         # 保存注册数据
         try:
-            User.objects.create_user(username=username, password=password, mobile=mobile)
+            user = User.objects.create_user(username=username, password=password, mobile=mobile)
         except DatabaseError:
             return render(request, 'register.html', {'register_errmsg': '注册失败'})
 
         # 实现状态保持
-        login(request, User)
+        login(request, user)
 
-        # 响应注册结果
-        return redirect(reverse('contents:index'))
+        response = redirect(reverse('contents:index'))
+
+        # 注册时用户名写入到cookie，有效期15天
+        response.set_cookie('username', user.username, max_age=3600 * 24 * 15)
+
+        return response
 
 class UsernameCountView(View):
     """判断用户名是否重复注册"""
@@ -103,3 +179,12 @@ class MobileCountView(View):
         """
         count = User.objects.filter(mobile=mobile).count()
         return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK', 'count': count})
+
+
+
+class UserInfoView(LoginRequiredMixin, View):
+    """用户中心"""
+
+    def get(self, request):
+        """提供个人信息界面"""
+        return render(request, 'user_center_info.html')
