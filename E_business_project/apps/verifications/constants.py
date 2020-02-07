@@ -1,0 +1,6 @@
+# 图形验证码保存时间常量
+IMAGE_CODE_REDIS_EXPIRES = 300
+# 短信验证码保存时间
+SMS_CODE_REDIS_EXPIRES = 300
+# 重写验证码保存时间
+SEND_SMS_CODE_INTERVAL = 60
