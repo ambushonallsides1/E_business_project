@@ -12,5 +12,7 @@ urlpatterns = [
     url(r'^', include('apps.verifications.urls')),
     # qq登录
     url(r'^', include('apps.oauth.urls', namespace="qq")),
+    # 地址
+    url(r'^', include('apps.areas.urls', namespace="areas")),
 
 ]

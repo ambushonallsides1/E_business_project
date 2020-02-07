@@ -16,4 +16,3 @@ class OAuthQQUser(BaseModel):
         db_table = 'tb_oauth_qq'
         verbose_name = 'QQ登录用户数据'
         verbose_name_plural = verbose_name
-

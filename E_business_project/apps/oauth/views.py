@@ -111,7 +111,7 @@ class QQAuthUserView(View):
         try:
             user = User.objects.get(mobile=mobile)
         except:
-            user = User.objects.create(username=mobile, password=pwd, mobile=mobile)
+            user = User.objects.create_user(username=mobile, password=pwd, mobile=mobile)
         else:
             # 如果用户存在，检查用户密码
             if not user.check_password(pwd):

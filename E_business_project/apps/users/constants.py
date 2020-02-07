@@ -1,0 +1,2 @@
+# 新增地址个数
+USER_ADDRESS_COUNTS_LIMIT = 20
