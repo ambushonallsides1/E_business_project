@@ -8,6 +8,7 @@ class GoodsCategory(BaseModel):
     """商品类别"""
     name = models.CharField(max_length=10, verbose_name='名称')
     parent = models.ForeignKey('self', related_name='subs', null=True, blank=True, on_delete=models.CASCADE, verbose_name='父类别')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_goods_category'
@@ -21,6 +22,7 @@ class GoodsCategory(BaseModel):
 class GoodsChannelGroup(models.Model):
     """商品频道组"""
     name = models.CharField(max_length=20, verbose_name='频道组名')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_channel_group'
@@ -37,6 +39,7 @@ class GoodsChannel(BaseModel):
     category = models.ForeignKey(GoodsCategory, on_delete=models.CASCADE, verbose_name='顶级商品类别')
     url = models.CharField(max_length=50, verbose_name='频道页面链接')
     sequence = models.IntegerField(verbose_name='组内顺序')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_goods_channel'
@@ -52,6 +55,7 @@ class Brand(BaseModel):
     name = models.CharField(max_length=20, verbose_name='名称')
     logo = models.ImageField(verbose_name='Logo图片')
     first_letter = models.CharField(max_length=1, verbose_name='品牌首字母')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_brand'
@@ -74,6 +78,7 @@ class SPU(BaseModel):
     desc_detail = models.TextField(default='', verbose_name='详细介绍')
     desc_pack = models.TextField(default='', verbose_name='包装信息')
     desc_service = models.TextField(default='', verbose_name='售后服务')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_spu'
@@ -98,6 +103,7 @@ class SKU(BaseModel):
     comments = models.IntegerField(default=0, verbose_name='评价数')
     is_launched = models.BooleanField(default=True, verbose_name='是否上架销售')
     default_image = models.ImageField(null=True, blank=True, verbose_name='默认图片')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_sku'
@@ -112,6 +118,7 @@ class SKUImage(BaseModel):
     """SKU图片"""
     sku = models.ForeignKey(SKU, on_delete=models.CASCADE, verbose_name='sku')
     image = models.ImageField(verbose_name='图片')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_sku_image'
@@ -126,6 +133,7 @@ class SPUSpecification(BaseModel):
     """商品SPU规格"""
     spu = models.ForeignKey(SPU, on_delete=models.CASCADE, related_name='specs', verbose_name='商品SPU')
     name = models.CharField(max_length=20, verbose_name='规格名称')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_spu_specification'
@@ -140,6 +148,7 @@ class SpecificationOption(BaseModel):
     """规格选项"""
     spec = models.ForeignKey(SPUSpecification, related_name='options', on_delete=models.CASCADE, verbose_name='规格')
     value = models.CharField(max_length=20, verbose_name='选项值')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_specification_option'
@@ -155,6 +164,7 @@ class SKUSpecification(BaseModel):
     sku = models.ForeignKey(SKU, related_name='specs', on_delete=models.CASCADE, verbose_name='sku')
     spec = models.ForeignKey(SPUSpecification, on_delete=models.PROTECT, verbose_name='规格名称')
     option = models.ForeignKey(SpecificationOption, on_delete=models.PROTECT, verbose_name='规格值')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_sku_specification'

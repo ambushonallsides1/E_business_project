@@ -8,6 +8,7 @@ class ContentCategory(BaseModel):
     """广告内容类别"""
     name = models.CharField(max_length=50, verbose_name='名称')
     key = models.CharField(max_length=50, verbose_name='类别键名')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_content_category'
@@ -27,6 +28,7 @@ class Content(BaseModel):
     text = models.TextField(null=True, blank=True, verbose_name='内容')
     sequence = models.IntegerField(verbose_name='排序')
     status = models.BooleanField(default=True, verbose_name='是否展示')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_content'

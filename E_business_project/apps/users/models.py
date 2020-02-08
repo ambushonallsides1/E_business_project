@@ -12,6 +12,7 @@ class User(AbstractUser):
     email_active = models.BooleanField(default=False, verbose_name='邮箱验证状态')
     default_address = models.ForeignKey('Address', related_name='users', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='默认地址')
 
+
     class Meta:
         db_table = 'tb_users'
         verbose_name = '用户'
@@ -33,6 +34,7 @@ class Address(BaseModel):
     tel = models.CharField(max_length=20, null=True, blank=True, default='', verbose_name='固定电话')
     email = models.CharField(max_length=30, null=True, blank=True, default='', verbose_name='电子邮箱')
     is_deleted = models.BooleanField(default=False, verbose_name='逻辑删除')
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_address'

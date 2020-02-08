@@ -11,6 +11,7 @@ class OAuthQQUser(BaseModel):
     """QQ登录用户数据"""
     user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='用户')
     openid = models.CharField(max_length=64, verbose_name='openid', db_index=True)
+    objects = models.Manager()
 
     class Meta:
         db_table = 'tb_oauth_qq'
