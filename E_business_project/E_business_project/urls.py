@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^', include('apps.areas.urls', namespace="areas")),
     # 首页商品
     url(r'^', include('apps.goods.urls', namespace='goods')),
+    # 购物车
+    url(r'^', include('apps.carts.urls', namespace='carts')),
     # haystact搜索路由
     url(r'^search/', include('haystack.urls')),
 

@@ -108,7 +108,7 @@ class RegisterView(View):
         # 是否同意用户协议
         allow = request.POST.get('allow')
         # 短信验证码
-        sms_code = request.POST.get('msg_code')
+        sms_code = request.POST.get('sms_code')
 
         # 判断参数是否齐全
         if not all([username, password, password2, mobile, allow, sms_code]):

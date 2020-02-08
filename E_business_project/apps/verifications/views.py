@@ -23,7 +23,7 @@ class ImageCodeView(View):
 
         # 保存验证码
         from django_redis import get_redis_connection
-        redis_client = get_redis_connection('verifications')
+        redis_client = get_redis_connection('verify_image_code')
         redis_client.setex('img_%s' % uuid, constants.IMAGE_CODE_REDIS_EXPIRES, text)
 
         return http.HttpResponse(image, content_type='image/jpg')
@@ -75,7 +75,6 @@ class SMSCodeView(View):
         # 重新写入send_flag
         pl.setex('send_flag_%s' % mobile, constants.SEND_SMS_CODE_INTERVAL, 1)
         pl.execute()
-
 
         # 第三方发送短信验证码
         from celery_tasks.sms.tasks import ccp_send_sms_code

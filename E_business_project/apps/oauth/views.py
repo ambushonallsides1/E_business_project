@@ -60,8 +60,9 @@ class QQAuthUserView(View):
         except :
             # 如果openid没绑定美多商Y城用户
             # 加密 openid--使用itsdangerous
-            secret_openid = SecretOauth().dumps({'openid': openid})
-            context = {'openid': secret_openid}
+            access_token = SecretOauth().dumps({'openid': openid})
+            context = {'access_token': access_token}
+            print(context)
             return render(request, 'oauth_callback.html', context)
         else:
             # 如果openid已绑定美多商城用户
@@ -78,13 +79,12 @@ class QQAuthUserView(View):
 
             return response
 
-    def post(self,request):
+    def post(self, request):
         # 解析参数
         mobile = request.POST.get('mobile')
         pwd = request.POST.get('password')
         sms_code_client = request.POST.get('sms_code')
-        openid = request.POST.get('openid')
-
+        access_token = request.POST.get('access_token')
         # 校验参数
         # 判断参数是否齐全
         if not all([mobile, pwd, sms_code_client]):
@@ -103,7 +103,7 @@ class QQAuthUserView(View):
         if sms_code_client != sms_code_server.decode():
             return render(request, 'oauth_callback.html', {'sms_code_errmsg': '输入短信验证码有误'})
         # 解密出openid 再判断openid是否有效
-        openid = SecretOauth().loads(openid).get('openid')
+        openid = SecretOauth().loads(access_token).get('openid')
         if not openid:
             return render(request, 'oauth_callback.html', {'openid_errmsg': '无效的openid'})
 
