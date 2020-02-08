@@ -18,6 +18,8 @@ urlpatterns = [
     url(r'^', include('apps.goods.urls', namespace='goods')),
     # 购物车
     url(r'^', include('apps.carts.urls', namespace='carts')),
+    # 订单
+    url(r'^', include('apps.orders.urls', namespace='orders')),
     # haystact搜索路由
     url(r'^search/', include('haystack.urls')),
 

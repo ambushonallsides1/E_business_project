@@ -3,11 +3,11 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 	<title>美多商城-订单确认</title>
-	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
-    <script type="text/javascript" src="../static/js/host.js"></script>
-    <script type="text/javascript" src="../static/js/vue-2.5.16.js"></script>
-    <script type="text/javascript" src="../static/js/axios-0.18.0.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ static('css/reset.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('css/main.css') }}">
+    <script type="text/javascript" src="{{ static('js/host.js') }}"></script>
+    <script type="text/javascript" src="{{ static('js/vue-2.5.16.js') }}"></script>
+    <script type="text/javascript" src="{{ static('js/axios-0.18.0.min.js') }}"></script>
 </head>
 <body>
 	<div id="app" v-cloak>
@@ -124,8 +124,8 @@
         let payment_amount='{{ payment_amount }}';
         let default_address_id = "{{ user.default_address.id }}";
     </script>
-	<script type="text/javascript" src="../static/js/host.js"></script>
-	<script type="text/javascript" src="../static/js/common.js"></script>
-	<script type="text/javascript" src="../static/js/place_order.js"></script>
+	<script type="text/javascript" src="{{ static('js/host.js') }}"></script>
+	<script type="text/javascript" src="{{ static('js/common.js') }}"></script>
+	<script type="text/javascript" src="{{ static('js/place_order.js') }}"></script>
 </body>
 </html>

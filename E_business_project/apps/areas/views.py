@@ -21,15 +21,15 @@ class AreasView(View):
             try:
                 province_model_list = Area.objects.filter(parent__isnull=True)
 
-                province_list = []
+                provience_list = []
                 for province_model in province_model_list:
-                    province_list.append({'id': province_model.id, 'name': province_model.name})
+                    provience_list.append({'id': province_model.id, 'name': province_model.name})
             except Exception as e:
                 logger.error(e)
                 return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '省份数据错误'})
 
             # 响应省份数据
-            return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK', 'province_list': province_list})
+            return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK', 'provience_list': provience_list})
         else:
             # 提供市区数据
             try:
@@ -46,6 +46,7 @@ class AreasView(View):
                     'name': parent_model.name,  # 父级name
                     'subs': sub_list  # 父级的子集
                 }
+
             except Exception as e:
                 logger.error(e)
                 return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '城市或区数据错误'})

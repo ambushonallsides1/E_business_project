@@ -20,7 +20,7 @@ urlpatterns = [
     # 用户邮箱认证路由
     url(r'^emails/verification/$', views.VerifyEmailView.as_view()),
     # 展示收货地址界面
-    url(r'^address/$', views.AddressView.as_view()),
+    url(r'^address/$', views.AddressView.as_view(), name='address'),
     # 新增地址路由
     url(r'^addresses/create/$', views.CreateAddressView.as_view()),
     # 修改地址路由
