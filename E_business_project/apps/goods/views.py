@@ -1,15 +1,18 @@
+import json
+
 from django import http
 from django.core.paginator import Paginator
 from django.shortcuts import render
 
 # Create your views here.
 from django.views import View
+from django_redis import get_redis_connection
 
 from apps.contents.utils import get_categories
 from apps.goods import models, constants
 from apps.goods.utils import get_breadcrumb
 from utils.response_code import RETCODE
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class ListView(View):
     """商品列表页"""
@@ -180,4 +183,53 @@ class DetailVisitView(View):
         except Exception as e:
             return http.HttpResponseServerError('新增失败')
 
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK'})
+
+class UserBrowseHistory(LoginRequiredMixin, View):
+    """用户浏览记录"""
+
+    def get(self, request):
+        """获取用户浏览记录"""
+        # 获取Redis存储的sku_id列表信息
+        redis_conn = get_redis_connection('history')
+        sku_ids = redis_conn.lrange('history_%s' % request.user.id, 0, -1)
+
+        # 根据sku_ids列表数据，查询出商品sku信息
+        skus = []
+        for sku_id in sku_ids:
+            sku = models.SKU.objects.get(id=sku_id)
+            skus.append({
+                'id': sku.id,
+                'name': sku.name,
+                'default_image_url': sku.default_image.url,
+                'price': sku.price
+            })
+
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK', 'skus': skus})
+
+    def post(self, request):
+        """保存用户浏览记录"""
+        # 1.接收json参数
+        sku_id = json.loads(request.body.decode()).get('sku_id')
+
+        # 2.根据sku_id 查询sku
+        try:
+            sku = models.SKU.objects.get(id=sku_id)
+        except:
+            return http.HttpResponseForbidden('商品不存在!')
+
+        # 3.如果有sku,保存到redis
+        history_redis_client = get_redis_connection('history')
+        history_key = 'history_%s' % request.user.id
+
+        redis_pipeline = history_redis_client.pipeline()
+        # 3.1 去重
+        history_redis_client.lrem(history_key, 0, sku_id)
+        # 3.2 存储
+        history_redis_client.lpush(history_key, sku_id)
+        # 3.3 截取 5个
+        history_redis_client.ltrim(history_key, 0, 4)
+        redis_pipeline.execute()
+
+        # 响应结果
         return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK'})

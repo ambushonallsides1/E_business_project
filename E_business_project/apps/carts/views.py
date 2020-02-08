@@ -151,5 +151,74 @@ class CartsView(LoginRequiredMixin, View):
         # 接收和校验参数
         json_dict = json.loads(request.body.decode())
         sku_id = json_dict.get('sku_id')
-        pass
+
+        # 判断sku_id是否存在
+        try:
+            models.SKU.objects.get(id=sku_id)
+        except:
+            return http.HttpResponseForbidden('商品不存在')
+
+        # 删除redis购物车
+        carts_redis_client = get_redis_connection('carts')
+
+        # 根据用户id 删除商品sku
+        carts_redis_client.hdel(request.user.id, sku_id)
+
+        # 删除结束后，没有响应的数据，只需要响应状态码即可
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': '删除购物车成功'})
+
+class CartsSelectAllView(LoginRequiredMixin, View):
+    """全选购物车"""
+
+    def put(self, request):
+        # 接收和校验参数
+        json_dict = json.loads(request.body.decode())
+        selected = json_dict.get('selected', True)
+
+        # 校验参数
+        if selected:
+            if not isinstance(selected, bool):
+                return http.HttpResponseForbidden('参数selected有误')
+
+        # 用户已登录，操作redis购物车
+        carts_redis_client = get_redis_connection('carts')
+        carts_data = carts_redis_client.hgetall(request.user.id)
+
+        # 将所有商品的 选中状态修改
+        for key, value in carts_data.items():
+            sku_id = int(key.decode())
+            carts_dict = json.loads(value.decode())
+
+            # 修改所有商品的 选中状态
+            carts_dict['selected'] = selected
+
+            carts_redis_client.hset(request.user.id, sku_id, json.dumps(carts_dict))
+
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': '全选购物车成功'})
+
+class CartsSimpleView(LoginRequiredMixin, View):
+    """商品页面右上角购物车"""
+
+    def get(self, request):
+
+        # 查询Redis购物车
+        carts_redis_client = get_redis_connection('carts')
+        carts_data = carts_redis_client.hgetall(request.user.id)
+        # 转换格式
+        cart_dict = {int(key.decode()): json.loads(value.decode()) for key, value in carts_data.items()}
+
+        # 构造简单购物车JSON数据
+        cart_skus = []
+        sku_ids = cart_dict.keys()
+        skus = models.SKU.objects.filter(id__in=sku_ids)
+        for sku in skus:
+            cart_skus.append({
+                'id': sku.id,
+                'name': sku.name,
+                'count': cart_dict.get(sku.id).get('count'),
+                'default_image_url': sku.default_image.url
+            })
+
+        # 响应json列表数据
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK', 'cart_skus': cart_skus})
 

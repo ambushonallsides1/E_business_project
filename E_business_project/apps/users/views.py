@@ -82,7 +82,7 @@ class LoginView(View):
 
         # 登录时用户名写入到cookie，有效期15天
         response.set_cookie('username', user.username, max_age=3600 * 24 * 15)
-        print('来了')
+
         # 响应登录结果
         return response
 
