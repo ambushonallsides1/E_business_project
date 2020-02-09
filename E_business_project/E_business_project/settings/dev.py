@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.orders',
     'apps.payment',
     'haystack', # 全文检索
+    'django_crontab', # 定时任务
 ]
 
 MIDDLEWARE = [
@@ -301,3 +302,11 @@ ALIPAY_APPID = '写自己的appid'
 ALIPAY_DEBUG = True
 ALIPAY_URL = 'https://openapi.alipaydev.com/gateway.do'
 ALIPAY_RETURN_URL = 'http://www.meiduo.site:8000/payment/status/'
+
+# 定时任务
+CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
+CRONJOBS = [
+    # 每1分钟生成一次首页静态文件
+    ('*/1 * * * *', 'apps.contents.crons.generate_static_index_html', '>> ' + os.path.join(BASE_DIR, 'logs/crontab.log'))
+]
+'''generate_static_index_html'''
