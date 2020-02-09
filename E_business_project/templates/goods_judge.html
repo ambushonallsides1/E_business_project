@@ -3,12 +3,12 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 	<title>美多商城-订单商品评价</title>
-	<link rel="stylesheet" type="text/css" href="css/reset.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-    <script type="text/javascript" src="js/host.js"></script>
-	<script type="text/javascript" src="js/common.js"></script>
-	<script type="text/javascript" src="js/vue-2.5.16.js"></script>
-    <script type="text/javascript" src="js/axios-0.18.0.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <script type="text/javascript" src="../static/js/host.js"></script>
+	<script type="text/javascript" src="../static/js/common.js"></script>
+	<script type="text/javascript" src="../static/js/vue-2.5.16.js"></script>
+    <script type="text/javascript" src="../static/js/axios-0.18.0.min.js"></script>
 </head>
 <body>
 	<div id="app" v-cloak>
@@ -20,15 +20,15 @@
 					欢迎您：<em>张 山</em>
 				</div>
 				<div class="login_btn fl">
-					<a href="../templates/login.html">登录</a>
+					<a href="login.html">登录</a>
 					<span>|</span>
-					<a href="../templates/register.html">注册</a>
+					<a href="register.html">注册</a>
 				</div>
 				<div class="user_link fl">
 					<span>|</span>
-					<a href="../templates/user_center_info.html">用户中心</a>
+					<a href="user_center_info.html">用户中心</a>
 					<span>|</span>
-					<a href="../templates/cart.html">我的购物车</a>
+					<a href="cart.html">我的购物车</a>
 					<span>|</span>
 					<a href="user_center_order.html">我的订单</a>
 				</div>
@@ -37,7 +37,7 @@
 	</div>
 
 	<div class="search_bar clearfix">
-		<a href="../templates/index.html" class="logo fl"><img src="images/logo.png"></a>
+		<a href="index.html" class="logo fl"><img src="../static/images/logo.png"></a>
 		<div class="search_wrap fl">
             <form method="get" action="/search/" class="search_con">
                 <input type="text" class="input_text fl" name="q" placeholder="搜索商品">
@@ -56,7 +56,7 @@
         <div class="judge_goods fl">     
             <ul>
                 <li>
-                    <a href="#"><img src="images/goods/goods001.jpg"></a>
+                    <a href="#"><img src="../static/images/goods/goods001.jpg"></a>
                     <h4><a href="#">华为 HUAWEI P10 Plus 6GB+64GB 钻雕金 移动联通电信4G手机 双卡双待</a></h4>
                     <div class="price">￥25.80</div>
                 </li>
@@ -102,7 +102,7 @@
 	<script>
     	var skus = [];
     </script>
-    <script type="text/javascript" src="js/common.js"></script>
-	<script type="text/javascript" src="js/goods_judge.js"></script>
+    <script type="text/javascript" src="../static/js/common.js"></script>
+	<script type="text/javascript" src="../static/js/goods_judge.js"></script>
 </body>
 </html>

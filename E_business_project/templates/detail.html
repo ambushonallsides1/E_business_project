@@ -274,9 +274,9 @@
         <h3>{{ sku.name }}</h3>
         <p>{{ sku.caption }}</p>
         <div class="price_bar">
-            <span class="show_pirce">¥<em>{{ sku.price }}</em></span>
-            <a href="javascript:;" class="goods_judge">18人评价</a>
-        </div>
+    <span class="show_pirce">¥<em>{{ sku.price }}</em></span>
+    <a href="javascript:;" class="goods_judge">[[ comments.length ]]人评价</a>
+</div>
         <div class="goods_num clearfix">
             <div class="num_name fl">数 量：</div>
             <div class="num_add fl">
@@ -324,7 +324,7 @@
         <li @click="on_tab_content('detail')" :class="tab_content.detail?'active':''">商品详情</li>
         <li @click="on_tab_content('pack')" :class="tab_content.pack?'active':''">规格与包装</li>
         <li @click="on_tab_content('service')" :class="tab_content.service?'active':''">售后服务</li>
-        <li @click="on_tab_content('comment')" :class="tab_content.comment?'active':''">商品评价(18)</li>
+        <li @click="on_tab_content('comment')" :class="tab_content.comment?'active':''">商品评价([[ comments.length ]])</li>
     </ul>
     <div @click="on_tab_content('detail')" class="tab_content" :class="tab_content.detail?'current':''">
         <dl>
@@ -345,10 +345,18 @@
         </dl>
     </div>
     <div @click="on_tab_content('comment')" class="tab_content" :class="tab_content.comment?'current':''">
-        <ul class="judge_list_con">
-            {#...商品评价...#}
-        </ul>
-    </div>
+    <ul class="judge_list_con">
+        <li class="judge_list fl" v-for="comment in comments">
+            <div class="user_info fl">
+                <b>[[comment.username]]</b>
+            </div>
+            <div class="judge_info fl">
+                <div :class="comment.score_class"></div>
+                <div class="judge_detail">[[comment.comment]]</div>
+            </div>
+        </li>
+    </ul>
+</div>
 </div>
 	</div>
 
