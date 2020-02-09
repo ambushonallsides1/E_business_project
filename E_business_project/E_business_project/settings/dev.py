@@ -108,16 +108,28 @@ WSGI_APPLICATION = 'E_business_project.wsgi.application'
 #     }
 # }
 
+
+
 DATABASES = {
-    'default': {
+    'default': { # 写（主机）
         'ENGINE': 'django.db.backends.mysql', # 数据库引擎
-        'HOST': '127.0.0.1', # 数据库主机
+        'HOST': '192.168.127.129', # 数据库主机
         'PORT': 3306, # 数据库端口
-        'USER': 'itheima', # 数据库用户名
+        'USER': 'itcast', # 数据库用户名
         'PASSWORD': '123456', # 数据库用户密码
         'NAME': 'meiduo' # 数据库名字
     },
+    'slave': { # 读（从机）
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '192.168.103.158',
+        'PORT': 8306,
+        'USER': 'root',
+        'PASSWORD': 'mysql',
+        'NAME': 'meiduo'
+    }
 }
+DATABASE_ROUTERS = ['utils.db_router.MasterSlaveDBRouter']
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
