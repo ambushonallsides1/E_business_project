@@ -26,7 +26,7 @@ SECRET_KEY = '-1xk7pzt5rh24*e7-g4krxp^yms%-xdzkiohjais_83*hb7&p7'
 DEBUG = True
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['www.meiduo.site','192.168.127.129']
+ALLOWED_HOSTS = ['www.Ebusinessproject.site','127.0.0.1']
 
 # Application definition
 
@@ -108,28 +108,25 @@ WSGI_APPLICATION = 'E_business_project.wsgi.application'
 #     }
 # }
 
-
-
 DATABASES = {
     'default': { # 写（主机）
         'ENGINE': 'django.db.backends.mysql', # 数据库引擎
-        'HOST': '192.168.127.129', # 数据库主机
+        'HOST': '127.0.0.1', # 数据库主机
         'PORT': 3306, # 数据库端口
-        'USER': 'itcast', # 数据库用户名
-        'PASSWORD': '123456', # 数据库用户密码
-        'NAME': 'meiduo' # 数据库名字
+        'USER': 'root', # 数据库用户名
+        'PASSWORD': 'mysql', # 数据库用户密码
+        'NAME': 'Ebusinessproject' # 数据库名字
     },
     'slave': { # 读（从机）
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '192.168.103.158',
+        'HOST': '127.0.0.1',
         'PORT': 8306,
         'USER': 'root',
         'PASSWORD': 'mysql',
-        'NAME': 'meiduo'
+        'NAME': 'Ebusinessproject_mall'
     }
 }
 DATABASE_ROUTERS = ['utils.db_router.MasterSlaveDBRouter']
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -247,7 +244,7 @@ LOGGING = {
         'file': {  # 向文件中输出日志
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/meiduo.log'),  # 日志文件的位置
+            'filename': os.path.join(BASE_DIR, 'logs/Ebusinessproject.log'),  # 日志文件的位置
             'maxBytes': 300 * 1024 * 1024,
             'backupCount': 10,
             'formatter': 'verbose'
@@ -275,7 +272,7 @@ LOGIN_URL = '/login/'
 # qq 配置
 QQ_CLIENT_ID = '101518219'
 QQ_CLIENT_SECRET = '418d84ebdc7241efb79536886ae95224'
-QQ_REDIRECT_URI = 'http://www.meiduo.site:8000/oauth_callback'
+QQ_REDIRECT_URI = 'http://www.Ebusinessproject.site:8000/oauth_callback'
 
 # 邮箱配置
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # 指定邮件后端
@@ -283,25 +280,25 @@ EMAIL_HOST = 'smtp.163.com' # 发邮件主机
 EMAIL_PORT = 25 # 发邮件端口
 EMAIL_HOST_USER = 'wnfdsg_zhedsfng_wzy@163.com' # 授权的邮箱
 EMAIL_HOST_PASSWORD = '110109z' # 邮箱授权时获得的密码，非注册登录密码
-EMAIL_FROM = '美多商城<hmmeiduo@163.com>' # 发件人抬头
-EMAIL_ACTIVE_URL = 'http://www.meiduo.site:8000/emails/verification/' #激活地址
+EMAIL_FROM = '美多商城<Ebusinessproject@163.com>' # 发件人抬头
+EMAIL_ACTIVE_URL = 'http://www.Ebusinessproject.site:8000/emails/verification/' #激活地址
 
 # 邮箱验证链接
-EMAIL_VERIFY_URL = 'http://www.meiduo.site:8000/emails/verification/'
+EMAIL_VERIFY_URL = 'http://www.Ebusinessproject.site:8000/emails/verification/'
 
 # 指定自定义的Django文件存储类
 DEFAULT_FILE_STORAGE = 'utils.fastdfs.fastdfs_storage.FastDFSStorage'
 # FastDFS相关参数
 # FDFS_BASE_URL = 'http://192.168.103.158:8888/'
-FDFS_BASE_URL = 'http://192.168.127.129:8888/'
-# FDFS_BASE_URL = 'http://image.meiduo.site:8888/'
+# FDFS_BASE_URL = 'http://127.0.0.1:8888/'
+FDFS_BASE_URL = 'http://image.Ebusinessproject.site:8888/'
 
 # Haystack
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://192.168.127.129:9200/', # Elasticsearch服务器ip地址，端口号固定为9200
-        'INDEX_NAME': 'meiduo', # Elasticsearch建立的索引库的名称
+        'URL': 'http://127.0.0.1:9200/', # Elasticsearch服务器ip地址，端口号固定为9200
+        'INDEX_NAME': 'Ebusinessproject', # Elasticsearch建立的索引库的名称
     },
 }
 # 当添加、修改、删除数据时，自动生成索引
@@ -310,10 +307,10 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 20
 
 # 支付宝配置
-ALIPAY_APPID = '写自己的appid'
+ALIPAY_APPID = 'fdjsklflkjgsfhs'
 ALIPAY_DEBUG = True
 ALIPAY_URL = 'https://openapi.alipaydev.com/gateway.do'
-ALIPAY_RETURN_URL = 'http://www.meiduo.site:8000/payment/status/'
+ALIPAY_RETURN_URL = 'http://www.Ebusinessproject.site:8000/payment/status/'
 
 # 定时任务
 CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
@@ -321,4 +318,3 @@ CRONJOBS = [
     # 每1分钟生成一次首页静态文件
     ('*/1 * * * *', 'apps.contents.crons.generate_static_index_html', '>> ' + os.path.join(BASE_DIR, 'logs/crontab.log'))
 ]
-'''generate_static_index_html'''
