@@ -25,6 +25,6 @@ class FastDFSStorage(Storage):
         :return: http://192.168.103.158:8888/group1/M00/00/00/wKhnnlxw_gmAcoWmAAEXU5wmjPs35.jpeg
         """
         # return 'http://192.168.103.158:8888/' + name
-        # return 'http://image.Ebusinessproject.site:8888/' + name
+        # return 'http://image.meiduo.site:8888/' + name
 
         return self.fdfs_base_url + name

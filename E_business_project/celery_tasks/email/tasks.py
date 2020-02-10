@@ -17,9 +17,9 @@ def send_verify_email(self, to_email, verify_url):
     :param verify_url: 验证链接
     :return: None
     """
-    subject = "商城邮箱验证"
+    subject = "美多商城邮箱验证"
     html_message = '<p>尊敬的用户您好！</p>' \
-                   '<p>感谢您使用商城。</p>' \
+                   '<p>感谢您使用美多商城。</p>' \
                    '<p>您的邮箱为：%s 。请点击此链接激活您的邮箱：</p>' \
                    '<p><a href="%s">%s<a></p>' % (to_email, verify_url, verify_url)
     try:
