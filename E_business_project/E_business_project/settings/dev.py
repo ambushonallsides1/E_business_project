@@ -26,7 +26,7 @@ SECRET_KEY = '-1xk7pzt5rh24*e7-g4krxp^yms%-xdzkiohjais_83*hb7&p7'
 DEBUG = True
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['www.meiduo.site','192.168.127.129']
+ALLOWED_HOSTS = ['www.meiduo.site','192.168.127.129','127.0.0.1']
 
 # Application definition
 
@@ -46,8 +46,10 @@ INSTALLED_APPS = [
     'apps.carts',
     'apps.orders',
     'apps.payment',
+    'apps.E_business_project_admin',
     'haystack', # 全文检索
     'django_crontab', # 定时任务
+    'corsheaders', # 前后端分离解决cors(跨域)问题
 ]
 
 MIDDLEWARE = [
@@ -58,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'E_business_project.urls'
@@ -109,26 +112,36 @@ WSGI_APPLICATION = 'E_business_project.wsgi.application'
 # }
 
 
-
 DATABASES = {
-    'default': { # 写（主机）
+    'default': {
         'ENGINE': 'django.db.backends.mysql', # 数据库引擎
         'HOST': '192.168.127.129', # 数据库主机
         'PORT': 3306, # 数据库端口
-        'USER': 'itcast', # 数据库用户名
-        'PASSWORD': '123456', # 数据库用户密码
-        'NAME': 'meiduo' # 数据库名字
+        'USER': 'root', # 数据库用户名
+        'PASSWORD': 'mysql', # 数据库用户密码
+        'NAME': 'meiduo_mall_admin' # 数据库名字
     },
-    'slave': { # 读（从机）
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': '192.168.103.158',
-        'PORT': 8306,
-        'USER': 'root',
-        'PASSWORD': 'mysql',
-        'NAME': 'meiduo'
-    }
 }
-DATABASE_ROUTERS = ['utils.db_router.MasterSlaveDBRouter']
+
+# DATABASES = {
+#     'default': { # 写（主机）
+#         'ENGINE': 'django.db.backends.mysql', # 数据库引擎
+#         'HOST': '192.168.127.129', # 数据库主机
+#         'PORT': 3306, # 数据库端口
+#         'USER': 'itcast', # 数据库用户名
+#         'PASSWORD': '123456', # 数据库用户密码
+#         'NAME': 'meiduo' # 数据库名字
+#     },
+#     'slave': { # 读（从机）
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': '192.168.103.158',
+#         'PORT': 8306,
+#         'USER': 'root',
+#         'PASSWORD': 'mysql',
+#         'NAME': 'meiduo'
+#     }
+# }
+# DATABASE_ROUTERS = ['utils.db_router.MasterSlaveDBRouter']
 
 
 # Password validation
@@ -268,6 +281,7 @@ logger = logging.getLogger('django')
 # 指定本项目用户模型类
 AUTH_USER_MODEL = 'users.User'
 
+#认证后端
 AUTHENTICATION_BACKENDS = ['apps.users.utils.UsernameMobileAuthBackend']
 
 LOGIN_URL = '/login/'
@@ -321,4 +335,31 @@ CRONJOBS = [
     # 每1分钟生成一次首页静态文件
     ('*/1 * * * *', 'apps.contents.crons.generate_static_index_html', '>> ' + os.path.join(BASE_DIR, 'logs/crontab.log'))
 ]
-'''generate_static_index_html'''
+
+# CORS添加白名单
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:8080',
+    'http://localhost:8080',
+    'http://www.meiduo.site:8080',
+    'http://www.meiduo.site:8000',
+)
+CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
+
+# DRF配置
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+import datetime
+# JWT配置
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'apps.E_business_project_admin.utils.jwt_response_payload_handler',
+}
+
+
+

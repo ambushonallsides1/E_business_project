@@ -11,6 +11,7 @@ def get_user_by_account(account):
      :param account: 用户名或者手机号
      :return: user
     """
+
     try:
         if re.match('^1[3-9]\d{9}$', account):
             # 手机号登录
@@ -23,11 +24,38 @@ def get_user_by_account(account):
         return user
 
 class UsernameMobileAuthBackend(ModelBackend):
+    '''自定义用户认证后端'''
 
-    def authenticate(self, request, username=None, password=None, **kwargs):
-        user = get_user_by_account(username)
-        if user and user.check_password(password):
-            return user
+    def authenticate(self, request=None, username=None, password=None, **kwargs):
+        # 判断是否通过vue组件发送请求
+
+        if request is None:
+            try:
+                user = User.objects.get(username=username, is_staff=True)
+            except:
+                return None
+            # 判断密码
+            if user.check_password(password):
+                return user
+
+        else:
+            user = get_user_by_account(username)
+            # # 变量username的值，可以是用户名，也可以是手机号，需要判断，再查询
+            # try:
+            #     user = User.objects.get(username=username)
+            # except:
+            #     # 如果未查到数据，则返回None，用于后续判断
+            #     try:
+            #         user = User.objects.get(mobile=username)
+            #     except:
+            #         return None
+            #         # return None
+
+            # 判断密码
+            if user and user.check_password(password):
+                return user
+            else:
+                return None
 
 def generate_verify_email_url(user):
     """

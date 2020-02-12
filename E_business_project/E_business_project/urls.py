@@ -22,6 +22,8 @@ urlpatterns = [
     url(r'^', include('apps.orders.urls', namespace='orders')),
     # 支付
     url(r'^', include('apps.payment.urls', namespace='payment')),
+    # 后台管理系统
+    url(r'^meiduo_admin/', include('apps.E_business_project_admin.urls', namespace='E_business_project_admin')),
     # haystact搜索路由
     url(r'^search/', include('haystack.urls')),
 

@@ -62,7 +62,7 @@ class LoginView(View):
             return http.HttpResponseForbidden('请输入8-20个字符的密码')
 
         from django.contrib.auth import authenticate
-        user = authenticate(username=username, password=password)
+        user = authenticate(request, username=username, password=password)
 
         if user is None:
             return render(request, 'login.html', context={'account_errmsg': '用户名或密码错误'})

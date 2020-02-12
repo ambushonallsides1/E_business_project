@@ -8,4 +8,4 @@ app = Celery('E_business_project')
 #3.加载配置文件
 app.config_from_object('celery_tasks.config')
 
-app.autodiscover_tasks(['celery_tasks.sms','send_verify_email'])
+app.autodiscover_tasks(['celery_tasks.sms','celery_tasks.email','celery_tasks.html'])
