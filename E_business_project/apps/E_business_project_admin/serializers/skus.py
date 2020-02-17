@@ -38,23 +38,37 @@ class SKUSerializer(serializers.ModelSerializer):
         if 'specs' in validated_data:
             del validated_data['specs']
 
-        # 3.保存sku数据
-        sku = SKU.objects.create(**validated_data)
+        from django.db import transaction
 
-        # 4.自己手动实现specs的数据入库
-        for item in specs:
-            # item = {spec_id: "4", option_id: 8}
-            SKUSpecification.objects.create(
-                sku=sku,
-                spec_id=item.get('spec_id'),
-                option_id=item.get('option_id')
-            )
+        with transaction.atomic():
 
-        # 生成详情页面
-        from celery_tasks.html.tasks import generate_static_sku_detail_html
-        generate_static_sku_detail_html.delay(sku.id)
+            # 事务保存点
+            savepoint = transaction.savepoint()
 
-        return sku
+            try:
+                # 3.保存sku数据
+                sku = SKU.objects.create(**validated_data)
+
+                # 4.自己手动实现specs的数据入库
+                for item in specs:
+                    # item = {spec_id: "4", option_id: 8}
+                    SKUSpecification.objects.create(
+                        sku=sku,
+                        spec_id=item.get('spec_id'),
+                        option_id=item.get('option_id')
+                    )
+
+            except:
+                transaction.savepoint_rollback(savepoint)
+                return serializers.ValidationError('数据库错误')
+            else:
+
+                transaction.savepoint_commit(savepoint)
+                # 生成详情页面
+                from celery_tasks.html.tasks import generate_static_sku_detail_html
+                generate_static_sku_detail_html.delay(sku.id)
+
+                return sku
 
     def update(self, instance, validated_data):
         # 1.把validated_data中的 specs 删除掉
